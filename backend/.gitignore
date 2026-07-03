@@ -1,0 +1,17 @@
+node_modules/
+dist/
+.env
+.env.local
+.DS_Store
+*.log
+npm-debug.log*
+coverage/
+.prisma/
+.next/
+build/
+__tests__/.env
+*.swp
+*.swo
+*~
+.vscode/
+.idea/

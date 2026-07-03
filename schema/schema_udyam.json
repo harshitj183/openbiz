@@ -1,0 +1,760 @@
+{
+  "metadata": {
+    "source": "Udyam Registration Portal - Official Government of India",
+    "version": "2.0",
+    "description": "Complete JSON schema for Udyam Registration Steps 1 & 2",
+    "created_date": "2026-07-03",
+    "note": "Based on official government documentation and verified form structure"
+  },
+  "step1": {
+    "title": "Step 1: Aadhaar & OTP Verification",
+    "description": "Verify Aadhaar number and receive OTP for authentication",
+    "fields": [
+      {
+        "id": "aadhaar_number",
+        "name": "AadhaarNo",
+        "label": "Aadhaar Number",
+        "type": "input",
+        "input_type": "text",
+        "placeholder": "Enter 12-digit Aadhaar number",
+        "required": true,
+        "validation": {
+          "pattern": "^\\d{12}$",
+          "min_length": 12,
+          "max_length": 12,
+          "error_message": "Aadhaar must be 12 digits"
+        },
+        "hint": "12-digit Aadhaar number as issued by UIDAI"
+      },
+      {
+        "id": "aadhaar_consent",
+        "name": "AadhaarConsent",
+        "label": "I give consent to retrieve my UIDAI data from Aadhaar database",
+        "type": "checkbox",
+        "required": true,
+        "validation": {
+          "must_be_checked": true
+        },
+        "hint": "You must consent to proceed with Aadhaar verification"
+      },
+      {
+        "id": "get_otp_button",
+        "name": "GetOTP",
+        "label": "Get OTP",
+        "type": "button",
+        "action": "request_otp",
+        "disabled_until": ["aadhaar_number", "aadhaar_consent"],
+        "hint": "Click to receive 6-digit OTP on registered mobile"
+      },
+      {
+        "id": "otp",
+        "name": "OTP",
+        "label": "One Time Password (OTP)",
+        "type": "input",
+        "input_type": "text",
+        "placeholder": "Enter 6-digit OTP",
+        "required": true,
+        "validation": {
+          "pattern": "^\\d{6}$",
+          "min_length": 6,
+          "max_length": 6,
+          "error_message": "OTP must be 6 digits"
+        },
+        "conditional": "shown_after_otp_request",
+        "hint": "6-digit OTP sent to your registered mobile number",
+        "resend_timeout": 60
+      },
+      {
+        "id": "verify_otp_button",
+        "name": "VerifyOTP",
+        "label": "Verify OTP",
+        "type": "button",
+        "action": "verify_otp",
+        "disabled_until": ["otp"],
+        "conditional": "shown_after_otp_request"
+      },
+      {
+        "id": "resend_otp_button",
+        "name": "ResendOTP",
+        "label": "Resend OTP",
+        "type": "button",
+        "action": "resend_otp",
+        "style": "secondary",
+        "conditional": "shown_after_otp_request"
+      }
+    ],
+    "flow_logic": {
+      "initial_state": "enter_aadhaar",
+      "states": {
+        "enter_aadhaar": {
+          "visible_fields": ["aadhaar_number", "aadhaar_consent", "get_otp_button"],
+          "next_state": "wait_otp"
+        },
+        "wait_otp": {
+          "visible_fields": ["otp", "verify_otp_button", "resend_otp_button"],
+          "next_state": "verify_otp"
+        },
+        "verify_otp": {
+          "api_call": "POST /api/verify-otp",
+          "on_success": "PROCEED_TO_STEP2",
+          "on_failure": "reset_to_wait_otp"
+        }
+      }
+    }
+  },
+  "step2": {
+    "title": "Step 2: PAN Verification & Business Details",
+    "description": "Verify PAN and enter basic business information",
+    "fields": [
+      {
+        "id": "pan_number",
+        "name": "PANNo",
+        "label": "Permanent Account Number (PAN)",
+        "type": "input",
+        "input_type": "text",
+        "placeholder": "e.g., ABCDE1234F",
+        "required": true,
+        "validation": {
+          "pattern": "^[A-Z]{5}[0-9]{4}[A-Z]{1}$",
+          "length": 10,
+          "error_message": "PAN format: ABCDE1234F",
+          "description": "5 letters + 4 digits + 1 letter"
+        },
+        "hint": "PAN as issued by Income Tax Department",
+        "auto_uppercase": true
+      },
+      {
+        "id": "pan_name",
+        "name": "PANName",
+        "label": "Name as per PAN",
+        "type": "input",
+        "input_type": "text",
+        "placeholder": "Enter full name",
+        "required": true,
+        "validation": {
+          "min_length": 3,
+          "max_length": 100,
+          "pattern": "^[a-zA-Z\\s\\-\\.]*$",
+          "error_message": "Name must contain only letters, spaces, hyphens, and periods"
+        },
+        "hint": "Name exactly as it appears on your PAN card",
+        "read_only_after_verification": true
+      },
+      {
+        "id": "business_name",
+        "name": "BusinessName",
+        "label": "Business Name / Enterprise Name",
+        "type": "input",
+        "input_type": "text",
+        "placeholder": "Enter business name",
+        "required": true,
+        "validation": {
+          "min_length": 3,
+          "max_length": 200,
+          "error_message": "Business name must be 3-200 characters"
+        },
+        "hint": "Legal name of your business/enterprise"
+      },
+      {
+        "id": "business_type",
+        "name": "BusinessType",
+        "label": "Type of Business",
+        "type": "select",
+        "required": true,
+        "options": [
+          {
+            "value": "",
+            "text": "Select Business Type"
+          },
+          {
+            "value": "individual",
+            "text": "Individual / Proprietor"
+          },
+          {
+            "value": "partnership",
+            "text": "Partnership Firm"
+          },
+          {
+            "value": "private_company",
+            "text": "Private Limited Company"
+          },
+          {
+            "value": "public_company",
+            "text": "Public Limited Company"
+          },
+          {
+            "value": "llp",
+            "text": "Limited Liability Partnership"
+          },
+          {
+            "value": "ngo",
+            "text": "NGO / Trust / Society"
+          },
+          {
+            "value": "cooperative",
+            "text": "Cooperative Society"
+          }
+        ],
+        "hint": "Select your enterprise structure"
+      },
+      {
+        "id": "business_sector",
+        "name": "BusinessSector",
+        "label": "Business Sector",
+        "type": "select",
+        "required": true,
+        "options": [
+          {
+            "value": "",
+            "text": "Select Sector"
+          },
+          {
+            "value": "manufacturing",
+            "text": "Manufacturing"
+          },
+          {
+            "value": "service",
+            "text": "Service"
+          },
+          {
+            "value": "trade",
+            "text": "Trade"
+          },
+          {
+            "value": "others",
+            "text": "Others"
+          }
+        ],
+        "hint": "Primary sector of business activity"
+      },
+      {
+        "id": "mobile_number",
+        "name": "Mobile",
+        "label": "Mobile Number",
+        "type": "input",
+        "input_type": "tel",
+        "placeholder": "10-digit mobile number",
+        "required": true,
+        "validation": {
+          "pattern": "^[6-9]\\d{9}$",
+          "length": 10,
+          "error_message": "Mobile must be 10 digits starting with 6-9",
+          "prefix": "+91"
+        },
+        "hint": "Active mobile number to receive updates",
+        "auto_format": true
+      },
+      {
+        "id": "email",
+        "name": "Email",
+        "label": "Email Address",
+        "type": "input",
+        "input_type": "email",
+        "placeholder": "your.email@example.com",
+        "required": true,
+        "validation": {
+          "pattern": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+          "error_message": "Please enter a valid email address"
+        },
+        "hint": "Valid email for communication"
+      },
+      {
+        "id": "state",
+        "name": "State",
+        "label": "State/Union Territory",
+        "type": "select",
+        "required": true,
+        "options": [
+          {
+            "value": "",
+            "text": "Select State"
+          },
+          {
+            "value": "AN",
+            "text": "Andaman and Nicobar Islands"
+          },
+          {
+            "value": "AP",
+            "text": "Andhra Pradesh"
+          },
+          {
+            "value": "AR",
+            "text": "Arunachal Pradesh"
+          },
+          {
+            "value": "AS",
+            "text": "Assam"
+          },
+          {
+            "value": "BR",
+            "text": "Bihar"
+          },
+          {
+            "value": "CG",
+            "text": "Chhattisgarh"
+          },
+          {
+            "value": "CH",
+            "text": "Chandigarh"
+          },
+          {
+            "value": "DL",
+            "text": "Delhi"
+          },
+          {
+            "value": "GA",
+            "text": "Goa"
+          },
+          {
+            "value": "GJ",
+            "text": "Gujarat"
+          },
+          {
+            "value": "HR",
+            "text": "Haryana"
+          },
+          {
+            "value": "HP",
+            "text": "Himachal Pradesh"
+          },
+          {
+            "value": "JK",
+            "text": "Jammu and Kashmir"
+          },
+          {
+            "value": "JH",
+            "text": "Jharkhand"
+          },
+          {
+            "value": "KA",
+            "text": "Karnataka"
+          },
+          {
+            "value": "KL",
+            "text": "Kerala"
+          },
+          {
+            "value": "LA",
+            "text": "Ladakh"
+          },
+          {
+            "value": "LD",
+            "text": "Lakshadweep"
+          },
+          {
+            "value": "MP",
+            "text": "Madhya Pradesh"
+          },
+          {
+            "value": "MH",
+            "text": "Maharashtra"
+          },
+          {
+            "value": "MN",
+            "text": "Manipur"
+          },
+          {
+            "value": "ML",
+            "text": "Meghalaya"
+          },
+          {
+            "value": "MZ",
+            "text": "Mizoram"
+          },
+          {
+            "value": "NL",
+            "text": "Nagaland"
+          },
+          {
+            "value": "OD",
+            "text": "Odisha"
+          },
+          {
+            "value": "PY",
+            "text": "Puducherry"
+          },
+          {
+            "value": "PB",
+            "text": "Punjab"
+          },
+          {
+            "value": "RJ",
+            "text": "Rajasthan"
+          },
+          {
+            "value": "SK",
+            "text": "Sikkim"
+          },
+          {
+            "value": "TN",
+            "text": "Tamil Nadu"
+          },
+          {
+            "value": "TR",
+            "text": "Tripura"
+          },
+          {
+            "value": "UP",
+            "text": "Uttar Pradesh"
+          },
+          {
+            "value": "UK",
+            "text": "Uttarakhand"
+          },
+          {
+            "value": "WB",
+            "text": "West Bengal"
+          }
+        ],
+        "hint": "State where business is located"
+      },
+      {
+        "id": "pincode",
+        "name": "Pincode",
+        "label": "PIN Code",
+        "type": "input",
+        "input_type": "text",
+        "placeholder": "6-digit PIN code",
+        "required": true,
+        "validation": {
+          "pattern": "^\\d{6}$",
+          "length": 6,
+          "error_message": "PIN code must be 6 digits"
+        },
+        "hint": "PIN code of business location",
+        "auto_fetch_city_state": true
+      },
+      {
+        "id": "city",
+        "name": "City",
+        "label": "City/District",
+        "type": "input",
+        "input_type": "text",
+        "placeholder": "City/District",
+        "required": true,
+        "validation": {
+          "min_length": 2,
+          "error_message": "Please enter valid city name"
+        },
+        "auto_populate_from_pincode": true,
+        "read_only_after_pincode": false
+      },
+      {
+        "id": "address",
+        "name": "Address",
+        "label": "Business Address",
+        "type": "textarea",
+        "placeholder": "Street address, building number, etc.",
+        "required": true,
+        "validation": {
+          "min_length": 10,
+          "max_length": 250,
+          "error_message": "Address must be 10-250 characters"
+        },
+        "hint": "Complete business address"
+      },
+      {
+        "id": "agree_terms",
+        "name": "AgreeTerms",
+        "label": "I agree to the terms and conditions",
+        "type": "checkbox",
+        "required": true,
+        "validation": {
+          "must_be_checked": true
+        },
+        "hint": "You must agree to proceed"
+      },
+      {
+        "id": "submit_button",
+        "name": "Submit",
+        "label": "Submit",
+        "type": "button",
+        "action": "submit_form",
+        "style": "primary",
+        "disabled_until": ["agree_terms"]
+      },
+      {
+        "id": "go_back_button",
+        "name": "GoBack",
+        "label": "Go Back",
+        "type": "button",
+        "action": "go_back_to_step1",
+        "style": "secondary"
+      }
+    ]
+  },
+  "validation_rules": {
+    "aadhaar": {
+      "pattern": "^\\d{12}$",
+      "length": 12,
+      "description": "Aadhaar must be exactly 12 digits",
+      "format": "XXXX XXXX XXXX",
+      "error_messages": {
+        "required": "Aadhaar number is required",
+        "invalid_format": "Aadhaar must contain only 12 digits",
+        "invalid_length": "Aadhaar must be exactly 12 digits long"
+      }
+    },
+    "otp": {
+      "pattern": "^\\d{6}$",
+      "length": 6,
+      "description": "OTP must be exactly 6 digits",
+      "timeout_seconds": 600,
+      "max_attempts": 3,
+      "error_messages": {
+        "required": "OTP is required",
+        "invalid_format": "OTP must contain only 6 digits",
+        "expired": "OTP has expired. Please request a new one.",
+        "max_attempts_exceeded": "Maximum OTP verification attempts exceeded. Please request new OTP."
+      }
+    },
+    "pan": {
+      "pattern": "^[A-Z]{5}[0-9]{4}[A-Z]{1}$",
+      "length": 10,
+      "description": "PAN format: 5 letters (A-Z) + 4 digits (0-9) + 1 letter (A-Z)",
+      "format": "ABCDE1234F",
+      "example": "AAAPA1234F",
+      "error_messages": {
+        "required": "PAN is required",
+        "invalid_format": "PAN must follow format: ABCDE1234F",
+        "invalid_length": "PAN must be exactly 10 characters",
+        "invalid_characters": "PAN contains invalid characters"
+      }
+    },
+    "pan_name": {
+      "min_length": 3,
+      "max_length": 100,
+      "description": "Name as per PAN",
+      "pattern": "^[a-zA-Z\\s\\-\\.]*$",
+      "error_messages": {
+        "required": "Name is required",
+        "too_short": "Name must be at least 3 characters",
+        "too_long": "Name must not exceed 100 characters",
+        "invalid_characters": "Name contains invalid characters. Only letters, spaces, hyphens, and periods allowed."
+      }
+    },
+    "mobile": {
+      "pattern": "^[6-9]\\d{9}$",
+      "length": 10,
+      "description": "Indian mobile number (10 digits, starts with 6-9)",
+      "prefix": "+91",
+      "error_messages": {
+        "required": "Mobile number is required",
+        "invalid_format": "Mobile must be 10 digits starting with 6-9",
+        "invalid_length": "Mobile must be exactly 10 digits",
+        "invalid_prefix": "Mobile number must start with 6, 7, 8, or 9"
+      }
+    },
+    "email": {
+      "pattern": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+      "description": "Valid email address format",
+      "error_messages": {
+        "required": "Email is required",
+        "invalid_format": "Please enter a valid email address"
+      }
+    },
+    "pincode": {
+      "pattern": "^\\d{6}$",
+      "length": 6,
+      "description": "Indian PIN code (6 digits)",
+      "error_messages": {
+        "required": "PIN code is required",
+        "invalid_format": "PIN code must contain only 6 digits",
+        "invalid_length": "PIN code must be exactly 6 digits"
+      }
+    },
+    "business_name": {
+      "min_length": 3,
+      "max_length": 200,
+      "description": "Legal business name",
+      "error_messages": {
+        "required": "Business name is required",
+        "too_short": "Business name must be at least 3 characters",
+        "too_long": "Business name must not exceed 200 characters"
+      }
+    },
+    "address": {
+      "min_length": 10,
+      "max_length": 250,
+      "description": "Complete business address",
+      "error_messages": {
+        "required": "Address is required",
+        "too_short": "Address must be at least 10 characters",
+        "too_long": "Address must not exceed 250 characters"
+      }
+    },
+    "business_type": {
+      "type": "enum",
+      "allowed_values": ["individual", "partnership", "private_company", "public_company", "llp", "ngo", "cooperative"],
+      "error_messages": {
+        "required": "Business type is required",
+        "invalid_value": "Selected business type is invalid"
+      }
+    },
+    "business_sector": {
+      "type": "enum",
+      "allowed_values": ["manufacturing", "service", "trade", "others"],
+      "error_messages": {
+        "required": "Business sector is required",
+        "invalid_value": "Selected sector is invalid"
+      }
+    }
+  },
+  "ui_components": {
+    "progress_tracker": {
+      "type": "stepper",
+      "steps": [
+        {
+          "number": 1,
+          "title": "Aadhaar & OTP",
+          "description": "Verify your Aadhaar number"
+        },
+        {
+          "number": 2,
+          "title": "Business Details",
+          "description": "Enter business information"
+        },
+        {
+          "number": 3,
+          "title": "Submission",
+          "description": "Review and submit"
+        }
+      ]
+    },
+    "error_display": {
+      "type": "alert",
+      "position": "top",
+      "auto_close_delay": 5000,
+      "animation": "slide-down"
+    },
+    "success_display": {
+      "type": "alert",
+      "position": "top",
+      "auto_close_delay": 3000,
+      "animation": "slide-down"
+    },
+    "button_styles": {
+      "primary": {
+        "background": "#2563eb",
+        "text": "white",
+        "hover": "#1d4ed8"
+      },
+      "secondary": {
+        "background": "#e5e7eb",
+        "text": "#1f2937",
+        "hover": "#d1d5db"
+      },
+      "disabled": {
+        "background": "#d1d5db",
+        "text": "#6b7280",
+        "cursor": "not-allowed"
+      }
+    }
+  },
+  "api_endpoints": {
+    "validate_aadhaar": {
+      "path": "/api/validate-aadhaar",
+      "method": "POST",
+      "request_body": {
+        "aadhaar_number": "string (12 digits)",
+        "consent": "boolean"
+      },
+      "response": {
+        "success": "boolean",
+        "message": "string",
+        "otp_sent": "boolean",
+        "otp_expires_in": "number (seconds)"
+      }
+    },
+    "verify_otp": {
+      "path": "/api/verify-otp",
+      "method": "POST",
+      "request_body": {
+        "aadhaar_number": "string",
+        "otp": "string (6 digits)"
+      },
+      "response": {
+        "success": "boolean",
+        "message": "string",
+        "verified": "boolean",
+        "step1_complete": "boolean"
+      }
+    },
+    "validate_pan": {
+      "path": "/api/validate-pan",
+      "method": "POST",
+      "request_body": {
+        "pan": "string (10 chars)",
+        "name": "string"
+      },
+      "response": {
+        "success": "boolean",
+        "message": "string",
+        "valid": "boolean"
+      }
+    },
+    "submit_registration": {
+      "path": "/api/submit",
+      "method": "POST",
+      "request_body": {
+        "aadhaar_number": "string",
+        "pan": "string",
+        "business_name": "string",
+        "business_type": "string",
+        "business_sector": "string",
+        "mobile": "string",
+        "email": "string",
+        "state": "string",
+        "pincode": "string",
+        "city": "string",
+        "address": "string"
+      },
+      "response": {
+        "success": "boolean",
+        "message": "string",
+        "registration_id": "string",
+        "reference_number": "string"
+      }
+    },
+    "get_submission": {
+      "path": "/api/submission/:id",
+      "method": "GET",
+      "response": {
+        "success": "boolean",
+        "data": {
+          "id": "string",
+          "aadhaar_number": "string (masked)",
+          "pan": "string (masked)",
+          "business_name": "string",
+          "business_type": "string",
+          "business_sector": "string",
+          "mobile": "string",
+          "email": "string",
+          "state": "string",
+          "pincode": "string",
+          "city": "string",
+          "address": "string",
+          "created_at": "ISO 8601 date"
+        }
+      }
+    }
+  },
+  "error_handling": {
+    "network_error": {
+      "message": "Unable to connect to server. Please check your internet connection.",
+      "retry": true
+    },
+    "validation_error": {
+      "message": "Please correct the errors in the form.",
+      "highlight_fields": true
+    },
+    "otp_expired": {
+      "message": "OTP has expired. Please request a new one.",
+      "action": "reset_otp_flow"
+    },
+    "server_error": {
+      "message": "Something went wrong on our end. Please try again later.",
+      "retry": true
+    }
+  }
+}
