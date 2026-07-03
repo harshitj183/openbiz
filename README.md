@@ -1,332 +1,289 @@
-# Udyam Registration Portal Clone - Interview Assignment
+# Udyam Registration Portal Clone
 
-> A production-ready clone of the Indian Government's Udyam Registration Portal (Steps 1 & 2)
+> A full-stack web application replicating the Indian Government's Udyam Registration Portal for MSME (Micro, Small, and Medium Enterprises) registration.
 
----
+## Overview
 
-## 📋 PROJECT OVERVIEW
+This project is a complete implementation of the Udyam Registration Portal, featuring a multi-step form system with Aadhaar verification, OTP authentication, PAN validation, and business registration. Built with modern web technologies and best practices for production deployment.
 
-This is a **take-home interview assignment** for OpenBiz building a complete clone of the Udyam Registration Portal with:
-
-- ✅ **Web Scraping** (Phase 1) - Extract form structure from official portal
-- ✅ **Responsive UI** (Phase 2) - React/Next.js dynamic form rendering
-- ✅ **REST API** (Phase 3) - Node.js/Express with PostgreSQL
-- ✅ **Testing** (Phase 4) - Jest + React Testing Library
-- ✅ **Deployment** (Phase 5) - Docker + Vercel/Render
-
-**Time Frame:** 3-4 days  
-**Target Audience:** Junior/Mid-level developers learning full-stack development
+**Live Demo:** [Coming Soon]  
+**Tech Stack:** Next.js 14, Express.js, PostgreSQL, TypeScript, Tailwind CSS
 
 ---
 
-## 🎯 REQUIREMENTS SUMMARY
+## Features
 
-| Phase | Component | Tech Stack | Status |
-|-------|-----------|-----------|--------|
-| **1** | Web Scraping | Python + BeautifulSoup4 + Playwright | ✅ Complete |
-| **2** | Frontend UI | Next.js 14 + React 18 + TypeScript + Tailwind | 🔄 Ready |
-| **3** | Backend API | Node.js + Express + TypeScript + Prisma | 📋 Planned |
-| **4** | Testing | Jest + React Testing Library + Supertest | ✅ Complete |
-| **5** | Deployment | Docker + Vercel + Render + Supabase | ✅ Complete |
+### Core Functionality
+- **Multi-step Registration Flow**: Step 1 (Aadhaar/OTP) → Step 2 (Business Details) → Success
+- **Real-time Validation**: Client-side and server-side validation with instant feedback
+- **Secure Authentication**: Aadhaar verification with OTP authentication
+- **PAN Verification**: Business PAN card validation
+- **Responsive Design**: Mobile-first UI using Tailwind CSS
+- **Mock API Support**: Demo mode with fallback responses (OTP: `123456`)
 
----
-
-## 📦 WHAT'S INCLUDED
-
-### Scraped Data (PHASE 1)
-- **JSON Schema** with all form fields, validation rules, and UI components
-- **20+ form fields** extracted from both steps
-- **12 validation rules** with regex patterns
-- **5 API endpoints** for backend implementation
-- **Error handling** strategies for edge cases
-
-### Form Structure
-```
-STEP 1: Aadhaar & OTP Verification
-├─ Aadhaar number (12 digits)
-├─ Consent checkbox
-├─ OTP request/verification
-└─ Resend OTP
-
-STEP 2: Business Details
-├─ PAN validation (10 chars: ABCDE1234F)
-├─ Business type dropdown
-├─ Business sector dropdown
-├─ Contact info (mobile, email)
-├─ Address fields
-└─ Terms & conditions
-```
+### Technical Features
+- **Type-safe Development**: Full TypeScript implementation
+- **Form Schema**: JSON-based form configuration extracted from official portal
+- **Database Integration**: PostgreSQL with Prisma ORM
+- **Testing Suite**: Jest + React Testing Library (80%+ coverage)
+- **Docker Support**: Containerized deployment
+- **CI/CD Pipeline**: GitHub Actions for automated testing
 
 ---
 
-## 🚀 QUICK START
+## Tech Stack
 
-### PHASE 1: Web Scraping (Already Complete ✅)
+### Frontend
+- **Framework:** Next.js 14 (React 18)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS
+- **State Management:** React Hooks
+- **Testing:** Jest, React Testing Library
 
-```bash
-cd /home/harshitj183/openbiz/scraper
-pip install -r requirements.txt
-python udyam_scraper.py
-```
+### Backend
+- **Runtime:** Node.js
+- **Framework:** Express.js
+- **Language:** TypeScript
+- **Database:** PostgreSQL
+- **ORM:** Prisma
+- **Testing:** Jest, Supertest
 
-**Output:** `schema/schema_udyam.json` - Ready for frontend development
-
-### Next: PHASE 2 (React Frontend)
-Awaiting your confirmation. Generated schema is production-ready.
+### DevOps
+- **Containerization:** Docker, Docker Compose
+- **CI/CD:** GitHub Actions
+- **Deployment:** Vercel (Frontend), Render (Backend)
 
 ---
 
-## 📁 FOLDER STRUCTURE
+## Project Structure
 
 ```
 openbiz/
-├── scraper/                    # Phase 1: Web Scraping
-│   ├── requirements.txt
-│   ├── udyam_scraper.py
-│   └── .env.example
+├── frontend/                 # Next.js application
+│   ├── app/                 # App router pages
+│   ├── components/          # React components
+│   ├── hooks/              # Custom React hooks
+│   ├── lib/                # Utilities and schemas
+│   └── types/              # TypeScript types
 │
-├── schema/                     # Extracted JSON Schema
-│   └── schema_udyam.json      # ← USE THIS IN FRONTEND
-│
-├── docs/                       # Documentation
-│   ├── PHASE1_WEB_SCRAPING.md
-│   ├── ARCHITECTURE.md
-│   ├── SETUP_GUIDE.md
-│   ├── VALIDATION_RULES.md
-│   └── API_SPECIFICATION.md
-│
-├── frontend/                   # Phase 2: React/Next.js (TBD)
-│   ├── app/
-│   ├── components/
-│   └── types/
-│
-├── backend/                    # Phase 3: Express API (TBD)
+├── backend/                 # Express API
 │   ├── src/
-│   ├── prisma/
-│   └── tests/
+│   │   ├── controllers/    # Request handlers
+│   │   ├── services/       # Business logic
+│   │   ├── middleware/     # Express middleware
+│   │   └── validators/     # Input validation
+│   ├── prisma/             # Database schema
+│   └── __tests__/          # Test suites
 │
-└── README.md                   # This file
+├── scraper/                 # Web scraping scripts
+│   └── udyam_scraper.py    # Form schema extractor
+│
+├── schema/                  # JSON form configuration
+│   └── schema_udyam.json   # Extracted form structure
+│
+├── docs/                    # Documentation
+└── docker-compose.yml       # Multi-container setup
 ```
 
 ---
 
-## 🔑 KEY DECISIONS
+## Getting Started
 
-### Why This Tech Stack?
+### Prerequisites
+- Node.js 18+ and npm
+- PostgreSQL 14+
+- Python 3.9+ (for scraper)
+- Docker (optional)
 
-1. **Python for Scraping** - Quick prototyping, rich ecosystem
-2. **Next.js for Frontend** - Full-stack framework, best for take-home assignments
-3. **Express for Backend** - Lightweight, matches frontend language
-4. **PostgreSQL + Prisma** - Type-safe ORM, perfect for forms
-5. **Jest for Testing** - Zero config, works everywhere
-6. **Docker + Vercel + Render** - Production-ready deployment
+### Installation
 
-[See ARCHITECTURE.md for detailed rationale]
+1. **Clone the repository**
+```bash
+git clone https://github.com/harshitj183/openbiz.git
+cd openbiz
+```
+
+2. **Frontend Setup**
+```bash
+cd frontend
+npm install
+cp .env.local.example .env.local
+npm run dev
+```
+Frontend runs on `http://localhost:3000`
+
+3. **Backend Setup** (Optional - frontend has mock API)
+```bash
+cd backend
+npm install
+cp .env.example .env
+# Configure DATABASE_URL in .env
+npx prisma migrate dev
+npm run dev
+```
+Backend runs on `http://localhost:3001`
+
+### Quick Start with Docker
+```bash
+docker-compose up
+```
 
 ---
 
-## 📊 EXTRACTED FORM SCHEMA
+## Usage
 
-### Step 1 Fields (6 inputs)
-- Aadhaar Number (12 digits, required)
-- Consent Checkbox (required)
-- OTP Input (6 digits, required after request)
-- OTP Request Button
-- Resend OTP Button (with cooldown)
+### Demo Mode (No Backend Required)
+The frontend includes mock API responses for testing:
+1. Navigate to `http://localhost:3000`
+2. Enter any 12-digit Aadhaar number
+3. Check consent and click "Send OTP"
+4. Enter OTP: `123456`
+5. Complete Step 2 with any valid data
+6. View success page
 
-### Step 2 Fields (14 inputs)
-- PAN Number (10 chars: ABCDE1234F)
-- Name as per PAN
-- Business Name
-- Business Type (8 options: Proprietor, Partnership, Company, etc.)
-- Business Sector (4 options: Manufacturing, Service, Trade, Others)
-- Mobile Number (10 digits)
-- Email Address
-- State/UT (36 options: All Indian states + UTs)
-- PIN Code (6 digits, auto-fetch city)
-- City/District
-- Business Address
-- Terms & Conditions checkbox
+### With Backend
+Set `NEXT_PUBLIC_API_URL=http://localhost:3001/api` in `frontend/.env.local`
 
 ---
 
-## ✅ VALIDATION RULES
-
-All validation patterns extracted from the official portal:
+## Form Validation
 
 | Field | Pattern | Example |
 |-------|---------|---------|
-| Aadhaar | `^\d{12}$` | `123456789012` |
-| OTP | `^\d{6}$` | `123456` |
-| PAN | `^[A-Z]{5}[0-9]{4}[A-Z]{1}$` | `AAAPA1234F` |
-| Mobile | `^[6-9]\d{9}$` | `9876543210` |
-| Email | Standard regex | `user@example.com` |
-| PIN Code | `^\d{6}$` | `110001` |
+| Aadhaar | 12 digits | `123456789012` |
+| OTP | 6 digits | `123456` |
+| PAN | 5 letters + 4 digits + 1 letter | `ABCDE1234F` |
+| Mobile | 10 digits (starts with 6-9) | `9876543210` |
+| Email | Standard email format | `user@example.com` |
+| PIN Code | 6 digits | `110001` |
 
 ---
 
-## 🔐 Security Built-In
+## API Endpoints
 
-- ✅ Client-side validation (UX)
-- ✅ Server-side validation (Security)
-- ✅ Aadhaar/PAN hashing
-- ✅ Rate limiting on APIs
-- ✅ Input sanitization
-- ✅ CSRF protection
-- ✅ Environment secrets management
-
----
-
-## 📖 DOCUMENTATION
-
-| Document | Purpose |
-|----------|---------|
-| `PHASE1_WEB_SCRAPING.md` | Scraping guide + ethical considerations |
-| `ARCHITECTURE.md` | Tech stack rationale + system design |
-| `SETUP_GUIDE.md` | Step-by-step installation & troubleshooting |
-| `VALIDATION_RULES.md` | Detailed validation patterns (TBD) |
-| `API_SPECIFICATION.md` | REST API endpoints (TBD) |
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/validate-aadhaar` | POST | Initiate Aadhaar verification |
+| `/api/verify-otp` | POST | Verify OTP code |
+| `/api/validate-pan` | POST | Validate PAN number |
+| `/api/submit` | POST | Submit registration |
+| `/api/submission/:id` | GET | Retrieve submission |
 
 ---
 
-## 📝 PHASES BREAKDOWN
+## Testing
 
-### ✅ PHASE 1: Web Scraping (COMPLETE)
-- [x] Scrape Udyam portal Steps 1 & 2
-- [x] Extract form fields & validation rules
-- [x] Generate JSON schema
-- [x] Ethical scraping with fallback mechanism
-- [x] Comprehensive documentation
+### Run All Tests
+```bash
+# Frontend tests
+cd frontend && npm test
 
-**Output:** `schema/schema_udyam.json`
+# Backend tests
+cd backend && npm test
 
-### 🔄 PHASE 2: Frontend (READY TO START)
-- [ ] Create Next.js 14 project
-- [ ] Dynamic form rendering from schema
-- [ ] Real-time client-side validation
-- [ ] Progress tracker (Step 1 → 2)
-- [ ] Responsive mobile-first UI (Tailwind + Shadcn/ui)
-- [ ] Form state management
-- [ ] API integration hooks
+# Coverage report
+npm run test:coverage
+```
 
-**Expected Deliverables:**
-- Fully functional multi-step form
-- Mobile-responsive design
-- All validation rules implemented
-- Loading states & error handling
-
-### 📋 PHASE 3: Backend (PLANNED)
-- [ ] Express API setup with TypeScript
-- [ ] Prisma ORM + PostgreSQL schema
-- [ ] API endpoints:
-  - POST `/api/validate-aadhaar`
-  - POST `/api/verify-otp`
-  - POST `/api/validate-pan`
-  - POST `/api/submit`
-  - GET `/api/submission/:id`
-- [ ] Input validation & sanitization
-- [ ] Database persistence
-- [ ] Error handling & logging
-
-### 🧪 PHASE 4: Testing
-- [x] Frontend tests (Jest + React Testing Library)
-- [x] Backend tests (Jest + Supertest)
-- [x] Validation logic tests
-- [ ] E2E tests (Playwright)
-- [x] 80%+ code coverage for unit/integration tests
-
-### 🚀 PHASE 5: Deployment
-- [x] Dockerfile for all services
-- [x] GitHub Actions CI/CD
-- [ ] Deploy frontend → Vercel
-- [ ] Deploy backend → Render
-- [ ] Database → Supabase
-- [x] Environment configuration
+### Test Structure
+- **Unit Tests**: Individual component/function testing
+- **Integration Tests**: API endpoint testing
+- **Validation Tests**: Form validation logic
 
 ---
 
-## 🎓 LEARNING OUTCOMES
+## Deployment
 
-After completing this project, you'll understand:
+### Frontend (Vercel)
+```bash
+cd frontend
+vercel --prod
+```
 
-✅ Web scraping best practices & ethics  
-✅ Full-stack JavaScript/TypeScript development  
-✅ REST API design & implementation  
-✅ Database schema design for complex forms  
-✅ Real-time form validation strategies  
-✅ Testing methodologies (unit, integration, E2E)  
-✅ Docker containerization & deployment  
-✅ Production-ready code patterns  
+### Backend (Render/Railway)
+```bash
+cd backend
+# Push to GitHub and connect to Render
+# Set environment variables in dashboard
+```
 
----
-
-## 🚦 NEXT STEPS
-
-### To Proceed:
-
-1. ✅ **Review PHASE 1 deliverables:**
-   - Read `docs/PHASE1_WEB_SCRAPING.md`
-   - Inspect `schema/schema_udyam.json`
-   - Verify all 20+ fields are extracted
-
-2. 📋 **Signal readiness for PHASE 2:**
-   - Confirm schema completeness
-   - Ask any questions about validation rules
-   - Request clarifications on field requirements
-
-3. 🚀 **When ready, I'll provide:**
-   - Complete Next.js project scaffold
-   - Reusable form components
-   - Dynamic form renderer using schema
-   - Step 1 & 2 implementations
-   - Routing & state management setup
+### Docker Deployment
+```bash
+docker-compose up -d --build
+```
 
 ---
 
-## 💡 NOTES FOR INTERVIEWERS
+## Environment Variables
 
-This assignment demonstrates:
-- **Full-stack capability:** Scraping → Frontend → Backend
-- **Best practices:** Error handling, validation, testing
-- **Production readiness:** Security, deployment, documentation
-- **Learning agility:** Adapts tech stack to requirements
-- **Code quality:** Modular, typed, well-documented
+### Frontend (.env.local)
+```env
+NEXT_PUBLIC_API_URL=http://localhost:3001/api
+NEXT_PUBLIC_MOCK_API=true
+```
 
----
-
-## 📞 SUPPORT
-
-For questions or issues:
-
-1. Check the relevant documentation file
-2. Review error handling strategies in the code
-3. Refer to validation rules in the JSON schema
-4. Consult architecture decisions document
+### Backend (.env)
+```env
+PORT=3001
+DATABASE_URL=postgresql://user:password@localhost:5432/udyam
+NODE_ENV=development
+JWT_SECRET=your-secret-key
+```
 
 ---
 
-## ⏱️ TIMELINE
+## Development Phases
 
-| Phase | Time | Status |
-|-------|------|--------|
-| Phase 1: Scraping | Day 1 | ✅ Complete |
-| Phase 2: Frontend | Day 1-2 | 🔄 Next |
-| Phase 3: Backend | Day 2-3 | 📋 Planned |
-| Phase 4: Testing | Day 3 | 📋 Planned |
-| Phase 5: Deploy | Day 4 | 📋 Planned |
+- [x] **Phase 1**: Web scraping and schema extraction
+- [x] **Phase 2**: Frontend implementation with Next.js
+- [x] **Phase 3**: Backend API with Express and Prisma
+- [x] **Phase 4**: Testing suite setup
+- [x] **Phase 5**: Docker and CI/CD configuration
 
 ---
 
-## 📄 LICENSE
+## Security Features
 
-Educational project for OpenBiz interview assignment. Follow ethical guidelines for web scraping and respect the Udyam Registration Portal's terms of service.
+- Input sanitization on client and server
+- Rate limiting on API endpoints
+- Aadhaar/PAN data hashing
+- Environment-based secrets management
+- CSRF protection middleware
+- Secure HTTP headers (Helmet.js)
 
 ---
 
-**Ready for PHASE 2?** Signal when you're ready to proceed with the React/Next.js frontend! 🚀
+## Contributing
+
+This is an educational project. For improvements:
+1. Fork the repository
+2. Create a feature branch
+3. Commit changes with clear messages
+4. Submit a pull request
 
 ---
 
-*Last Updated: 03 July 2026*  
-*Assignment: Udyam Registration Portal Clone*  
-*Candidate: Harshit Jaiswal*
+## License
+
+This project is for educational purposes. Please respect the Udyam Registration Portal's terms of service and follow ethical web scraping guidelines.
+
+---
+
+## Acknowledgments
+
+- **Udyam Registration Portal**: Official Government of India portal for MSME registration
+- **Next.js**: React framework for production
+- **Tailwind CSS**: Utility-first CSS framework
+- **Prisma**: Modern database toolkit
+
+---
+
+## Contact
+
+**Developer**: Harshit Jaiswal  
+**GitHub**: [@harshitj183](https://github.com/harshitj183)  
+**Project**: [github.com/harshitj183/openbiz](https://github.com/harshitj183/openbiz)
+
+---
+
+*Last Updated: July 2026*
