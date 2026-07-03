@@ -6,7 +6,7 @@
 
 This project is a complete implementation of the Udyam Registration Portal, featuring a multi-step form system with Aadhaar verification, OTP authentication, PAN validation, and business registration. Built with modern web technologies and best practices for production deployment.
 
-**Live Demo:** [Coming Soon]  
+**Live Demo:** [https://frontend-alpha-seven-20.vercel.app](https://frontend-alpha-seven-20.vercel.app)  
 **Tech Stack:** Next.js 14, Express.js, PostgreSQL, TypeScript, Tailwind CSS
 
 ---
