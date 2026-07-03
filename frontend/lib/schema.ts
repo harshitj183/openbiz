@@ -1,6 +1,6 @@
 // Load schema from JSON file
 
-import schema from '@/../schema/schema_udyam.json';
+import schema from '@/lib/schema_udyam.json';
 import { UdyamSchema } from '@/types';
 
 export function getSchema(): UdyamSchema {
